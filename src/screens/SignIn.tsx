@@ -4,7 +4,7 @@ import { GoogleSignin} from '@react-native-google-signin/google-signin'
 import { Realm, useApp } from '@realm/react';
 
 import backgroundImg from '@assets/background.png';
-import { Button } from '../../components/Button';
+import { Button } from '../components/Button';
 import { IOS_CLIENT_ID, WEB_CLIENT_ID } from '@env';
 
 GoogleSignin.configure({
