@@ -15,6 +15,7 @@ import { Header } from "../components/Header";
 import { Button } from '../components/Button'
 
 import { licencePlateValidate } from '../utils/licensePlateValidate';
+import { getAddressLocation } from '../utils/getAddressLocation';
 
 export function Departure() {
   const [description, setDescription] = useState('')
@@ -77,7 +78,9 @@ export function Departure() {
       accuracy: LocationAccuracy.High,
       timeInterval: 1000
     }, (location) => {
-      console.log(location)
+      getAddressLocation(location.coords).then(address => {
+        console.log(address)
+      })
     }).then(response => subscription = response)
 
     return () => subscription.remove()
