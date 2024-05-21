@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { Alert, FlatList, View, Text } from "react-native";
+import Toast from "react-native-toast-message";
+import { CloudArrowUp } from "phosphor-react-native";
 import { useNavigation } from "@react-navigation/native";
 import dayjs from "dayjs";
 
@@ -8,13 +10,16 @@ import { useQuery, useRealm } from '../libs/realm'
 import { Historic } from "../libs/realm/schemas/Historic";
 import { getLastSyncTimestamp, saveLastSyncTimestamp } from '../libs/asyncStorage/syncStorage';
 
-import { HomeHeader } from "../components/HomeHeader";
 import { CarStatus } from "../components/CarStatus";
+import { HomeHeader } from "../components/HomeHeader";
 import { HistoricCard, type HistoricCardProps } from "../components/HistoricCard";
+
+import { TopMessage } from "../components/TopMessage";
 
 export function Home() {
   const [vehicleInUse, setVehicleInUse] = useState<Historic | null>(null)
   const [vehicleHistoric, setVehicleHistoric] = useState<HistoricCardProps[]>([])
+  const [percentageToSync, setPercentageToSync] = useState<string | null>(null);
 
   const { navigate } = useNavigation()
 
@@ -68,11 +73,21 @@ export function Home() {
   }
 
   async function progressNotification(transferred: number, transferable: number) {
-    const percentage = (transferred/transferable) * 100;
+    const percentage = (transferred / transferable) * 100;
 
-    if(percentage === 100) {
+    if (percentage === 100) {
       await saveLastSyncTimestamp();
       await fetchHistoric();
+      setPercentageToSync(null);
+
+      Toast.show({
+        type: 'info',
+        text1: 'Todos os dados estão sincronizados.'
+      })
+    }
+
+    if (percentage < 100) {
+      setPercentageToSync(`${percentage.toFixed(0)}% sincronizado.`)
     }
   }
 
@@ -120,6 +135,10 @@ export function Home() {
 
   return (
     <View className="flex-1 bg-gray-800">
+      {
+        percentageToSync && <TopMessage title={percentageToSync} icon={CloudArrowUp} />
+      }
+
       <HomeHeader />
 
       <View className="flex-1 px-8">

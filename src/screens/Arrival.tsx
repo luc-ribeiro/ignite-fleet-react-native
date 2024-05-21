@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { X } from 'phosphor-react-native';
 
@@ -10,12 +11,15 @@ import { View, Text, Alert } from "react-native";
 import { Header } from '../components/Header';
 import { Button } from '../components/Button';
 import { ButtonIcon } from '../components/ButtonIcon';
+import { getLastSyncTimestamp } from '../libs/asyncStorage/syncStorage';
 
 type RouteParamsProps = {
   id: string
 }
 
 export function Arrival() {
+  const [dataNotSynced, setDataNotSynced] = useState(false);
+
   const route = useRoute()
   const { id } = route.params as RouteParamsProps
 
@@ -59,6 +63,12 @@ export function Arrival() {
     }
   }
 
+  useEffect(() => {
+    getLastSyncTimestamp()
+      .then(lastSync => setDataNotSynced(historic!.updated_at.getTime() > lastSync));
+
+  }, [])
+
   return (
     <View className="flex-1 bg-gray-800">
       <Header title={title} />
@@ -73,15 +83,22 @@ export function Arrival() {
       </View>
 
       {
-          historic?.status === 'departure' &&
-          (
-            <View className='w-100 flex-row gap-4 mt-8 p-8'>
-              <ButtonIcon icon={X} onPress={handleRemoveVehicleUsage} />
+        historic?.status === 'departure' &&
+        (
+          <View className='w-100 flex-row gap-4 mt-8 p-8'>
+            <ButtonIcon icon={X} onPress={handleRemoveVehicleUsage} />
 
-              <Button title='Registrar chegada' onPress={handleArrivalRegister} />
-            </View>
-          )
-        }
+            <Button title='Registrar chegada' onPress={handleArrivalRegister} />
+          </View>
+        )
+      }
+
+      {
+        dataNotSynced &&
+        <Text className='text-gray-300 text-sm font-regular text-center flex-1 m-8'>
+          Sincronização da {historic?.status === 'departure' ? "partida" : "chegada"} pendente
+        </Text>
+      }
     </View>
   )
 }
