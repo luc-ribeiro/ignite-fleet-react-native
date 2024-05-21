@@ -1,6 +1,7 @@
 import { View } from "react-native";
 import { Header } from "../components/Header";
 import { LicencePlateInput } from "../components/LicensePlateInput";
+import { TextAreaInput } from "../components/TextAreaInput";
 
 
 export function Departure() {
@@ -13,6 +14,8 @@ export function Departure() {
           label="Placa do veículo"
           placeholder="BRA1234"
         />
+
+        <TextAreaInput label="Finalidade" placeholder='Vou utilizar o veículo para...' />
       </View>
     </View>
   )
