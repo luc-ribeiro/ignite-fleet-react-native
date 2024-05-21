@@ -15,7 +15,7 @@ export function Header({ title }: Props) {
   const paddingTop = insets.top + 42
 
   return (
-    <View style={{ paddingTop }} className="w-100 px-8 pb-6 flex-row justify-between bg-gray-700 z-10">
+    <View style={{ paddingTop }} className="w-100 px-8 pb-6 flex-row justify-between bg-gray-700">
 
       <TouchableOpacity activeOpacity={0.7} onPress={goBack}>
         <ArrowLeft size={24} weight="bold" color="#00B37E" />

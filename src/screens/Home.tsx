@@ -3,7 +3,7 @@ import { Alert, FlatList, View, Text } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import dayjs from "dayjs";
 
-import { useUser } from "@realm/react";
+import { Realm, useUser } from "@realm/react";
 import { useQuery, useRealm } from '../libs/realm'
 import { Historic } from "../libs/realm/schemas/Historic";
 
@@ -64,6 +64,11 @@ export function Home() {
     navigate('arrival', { id })
   }
 
+  function progressNotification(transferred: number, transferable: number) {
+    console.log('Transferable => ', transferable)
+    console.log('Transferred => ', transferred)
+  }
+
   useEffect(() => {
     fetchVehicleInUse()
   }, [])
@@ -89,6 +94,22 @@ export function Home() {
       mutableSubs.add(historicByUserQuery, { name: 'historic_by_user' });
     })
   }, [realm]);
+
+  useEffect(() => {
+    const syncSession = realm.syncSession
+
+    if (!syncSession) {
+      return
+    }
+
+    syncSession.addProgressNotification(
+      Realm.ProgressDirection.Upload,
+      Realm.ProgressMode.ReportIndefinitely,
+      progressNotification
+    )
+
+    return () => syncSession.removeProgressNotification(progressNotification)
+  }, [])
 
   return (
     <View className="flex-1 bg-gray-800">
