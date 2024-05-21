@@ -13,7 +13,7 @@ export function CarStatus({ licensePlate = null, ...rest }: Props) {
   return (
     <TouchableOpacity className="w-100 my-8 rounded-md bg-gray-700 flex-row items-center p-5" {...rest}>
       <View className="w-[77px] h-[77px] rounded-md bg-gray-600 mr-3 justify-center items-center">
-        <Icon size={32} color='#00B37E' />
+        <Icon size={52} color='#00B37E' />
       </View>
 
       <Text className='text-gray-100 text-sm font-regular flex-1 text-justify' style={{ textAlignVertical: 'center'}}>

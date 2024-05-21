@@ -1,17 +1,19 @@
 import { useRef, useState } from 'react';
-import { View, TextInput, Platform, KeyboardAvoidingView, ScrollView, Alert } from "react-native";
-import { Header } from "../components/Header";
-import { LicencePlateInput } from "../components/LicensePlateInput";
-import { TextAreaInput } from "../components/TextAreaInput";
-import { Button } from '../components/Button'
-import { licencePlateValidate } from '../utils/licensePlateValidate';
+import { View, TextInput, ScrollView, Alert } from "react-native";
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+
+import { useNavigation } from '@react-navigation/native';
 
 import { useRealm } from '../libs/realm';
 import { Historic } from '../libs/realm/schemas/Historic';
 import { useUser } from '@realm/react';
-import { useNavigation } from '@react-navigation/native';
 
-const keyboardAvoidingViewBehavior = Platform.OS === 'android' ? 'height' : 'position';
+import { LicencePlateInput } from "../components/LicensePlateInput";
+import { TextAreaInput } from "../components/TextAreaInput";
+import { Header } from "../components/Header";
+import { Button } from '../components/Button'
+
+import { licencePlateValidate } from '../utils/licensePlateValidate';
 
 export function Departure() {
   const [description, setDescription] = useState('')
@@ -21,7 +23,6 @@ export function Departure() {
   const {goBack} = useNavigation()
   const realm = useRealm()
   const user = useUser()
-
 
   const descriptionRef = useRef<TextInput>(null);
   const licensePlateRef = useRef<TextInput>(null);
@@ -62,7 +63,7 @@ export function Departure() {
     <View className="flex-1 bg-gray-800">
       <Header title="Saída" />
 
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior={keyboardAvoidingViewBehavior} >
+      <KeyboardAwareScrollView extraHeight={100}>
         <ScrollView>
           <View className="flex-1 p-6 pt-10 gap-y-4">
             <LicencePlateInput
@@ -93,7 +94,7 @@ export function Departure() {
             />
           </View>
         </ScrollView>
-      </KeyboardAvoidingView>
+      </KeyboardAwareScrollView>
     </View>
   )
 }

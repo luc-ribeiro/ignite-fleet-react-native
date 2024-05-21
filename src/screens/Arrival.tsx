@@ -23,6 +23,8 @@ export function Arrival() {
   const { goBack } = useNavigation()
   const realm = useRealm()
 
+  const title = historic?.status === 'departure' ? 'Chegada' : 'Detalhes'
+
   function handleRemoveVehicleUsage() {
     Alert.alert('Cancelar', 'Cancelar a utilização do veículo?', [
       { text: "Não", style: 'cancel' },
@@ -59,7 +61,7 @@ export function Arrival() {
 
   return (
     <View className="flex-1 bg-gray-800">
-      <Header title="Chegada" />
+      <Header title={title} />
       <View className='grow p-8'>
         <Text className="text-gray-300 text-sm font-regular mt-8 mb-1">Placa do veículo</Text>
 
@@ -68,13 +70,18 @@ export function Arrival() {
         <Text className="text-gray-300 text-sm font-regular mt-8 mb-1">Finalidade</Text>
 
         <Text className="text-gray-100 text-md font-regular text-justify">{historic?.description}</Text>
-
-        <View className='w-100 flex-row gap-4 mt-8'>
-          <ButtonIcon icon={X} onPress={handleRemoveVehicleUsage} />
-
-          <Button title='Registrar chegada' onPress={handleArrivalRegister} />
-        </View>
       </View>
+
+      {
+          historic?.status === 'departure' &&
+          (
+            <View className='w-100 flex-row gap-4 mt-8 p-8'>
+              <ButtonIcon icon={X} onPress={handleRemoveVehicleUsage} />
+
+              <Button title='Registrar chegada' onPress={handleArrivalRegister} />
+            </View>
+          )
+        }
     </View>
   )
 }

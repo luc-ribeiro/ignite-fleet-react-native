@@ -15,7 +15,7 @@ type Props = TouchableOpacityProps & {
 
 export function HistoricCard({ data, ...rest }: Props) {
   return (
-    <TouchableOpacity className='w-100 bg-gray-700 py-5 px-4 flex-row justify-between items-center rounded-md mb-3' {...rest}>
+    <TouchableOpacity activeOpacity={0.7} className='w-100 bg-gray-700 py-5 px-4 flex-row justify-between items-center rounded-md mb-3' {...rest}>
       <View className="flex-1">
         <Text className="text-white text-md font-bold">
           {data.licensePlate}
