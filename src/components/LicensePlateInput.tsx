@@ -1,10 +1,11 @@
+import { forwardRef } from "react";
 import { Text, TextInput, View, type TextInputProps } from "react-native";
 
 type Props = TextInputProps & {
   label: string
 }
 
-export function LicencePlateInput({ label, ...rest }: Props) {
+const LicencePlateInput = forwardRef<TextInput, Props>(({ label, ...rest }, ref) => {
   return (
     <View className="w-100 p-4 rounded-md bg-gray-700">
       <Text className="text-gray-300 text-sm font-regular">
@@ -15,4 +16,6 @@ export function LicencePlateInput({ label, ...rest }: Props) {
 
     </View>
   )
-}
+})
+
+export { LicencePlateInput }
