@@ -6,6 +6,7 @@ import dayjs from "dayjs";
 import { Realm, useUser } from "@realm/react";
 import { useQuery, useRealm } from '../libs/realm'
 import { Historic } from "../libs/realm/schemas/Historic";
+import { getLastSyncTimestamp, saveLastSyncTimestamp } from '../libs/asyncStorage/syncStorage';
 
 import { HomeHeader } from "../components/HomeHeader";
 import { CarStatus } from "../components/CarStatus";
@@ -39,15 +40,17 @@ export function Home() {
     }
   }
 
-  function fetchHistoric() {
+  async function fetchHistoric() {
     try {
       const response = historic.filtered("status = 'arrival' SORT(created_at DESC)")
+
+      const lastSync = await getLastSyncTimestamp();
 
       const formattedHistoric = response.map(item => {
         return ({
           id: item._id.toString(),
           licensePlate: item.license_plate,
-          isSync: false,
+          isSync: lastSync > item.updated_at!.getTime(),
           created: dayjs(item.created_at).format('[Saída em] DD/MM/YYYY [às] HH:mm'),
         })
       })
@@ -64,9 +67,13 @@ export function Home() {
     navigate('arrival', { id })
   }
 
-  function progressNotification(transferred: number, transferable: number) {
-    console.log('Transferable => ', transferable)
-    console.log('Transferred => ', transferred)
+  async function progressNotification(transferred: number, transferable: number) {
+    const percentage = (transferred/transferable) * 100;
+
+    if(percentage === 100) {
+      await saveLastSyncTimestamp();
+      await fetchHistoric();
+    }
   }
 
   useEffect(() => {
