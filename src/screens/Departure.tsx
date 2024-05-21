@@ -1,6 +1,7 @@
-import { useRef, useState } from 'react';
-import { View, TextInput, ScrollView, Alert } from "react-native";
+import { useEffect, useRef, useState } from 'react';
+import { View, TextInput, ScrollView, Alert, Text } from "react-native";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { useForegroundPermissions } from 'expo-location';
 
 import { useNavigation } from '@react-navigation/native';
 
@@ -20,7 +21,9 @@ export function Departure() {
   const [licensePlate, setLicensePlate] = useState('')
   const [isRegistering, setIsRegistering] = useState(false)
 
-  const {goBack} = useNavigation()
+  const [locationForegroundPermission, requestLocationForegroundPermission] = useForegroundPermissions()
+
+  const { goBack } = useNavigation()
   const realm = useRealm()
   const user = useUser()
 
@@ -33,7 +36,7 @@ export function Departure() {
         licensePlateRef.current?.focus()
         return Alert.alert('Placa inválida', 'Por favor, insira uma placa válida.')
       }
-  
+
       if (description.trim().length === 0) {
         descriptionRef.current?.focus()
         return Alert.alert('Finalidade inválida', 'Por favor, informe a finalidade da utilização do veículo.')
@@ -57,6 +60,20 @@ export function Departure() {
       Alert.alert('Erro', 'Não foi possível registrar a saída. Tente novamente mais tarde.')
       setIsRegistering(false)
     }
+  }
+
+  useEffect(() => {
+    requestLocationForegroundPermission()
+  }, [])
+
+  if (!locationForegroundPermission?.granted) {
+    return (
+      <View className="flex-1 bg-gray-800">
+        <Header title="Saída" />
+
+        <Text className="text-white font-regular text-center m-6">Você precisa permitir que o aplicativo tenha acesso a localização para utilizar essa funcionalidade. Por favor, acesse as configurações do seu dispositivo para conceder essa permissão ao aplicativo.</Text>
+      </View>
+    )
   }
 
   return (
