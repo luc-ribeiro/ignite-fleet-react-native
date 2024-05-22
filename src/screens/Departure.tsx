@@ -28,6 +28,7 @@ import { Map } from '../components/Map'
 import { licencePlateValidate } from '../utils/licensePlateValidate';
 import { getAddressLocation } from '../utils/getAddressLocation';
 import { startLocationTask } from '../tasks/backgroundLocationTask';
+import { openSettings } from '../utils/openSettings';
 
 export function Departure() {
   const [description, setDescription] = useState('')
@@ -68,7 +69,12 @@ export function Departure() {
 
       if (!backgroundPermissions.granted) {
         setIsRegistering(false)
-        return Alert.alert('Localização', 'É necessário permitir que o App tenha acesso localização em segundo plano. Acesse as configurações do dispositivo e habilite "Permitir o tempo todo."')
+
+        return Alert.alert(
+          'Localização',
+          'É necessário permitir que o App tenha acesso localização em segundo plano. Acesse as configurações do dispositivo e habilite "Permitir o tempo todo."',
+          [{ text: 'Abrir configurações', onPress: openSettings }]
+        )
       }
 
       await startLocationTask();
@@ -133,7 +139,12 @@ export function Departure() {
       <View className="flex-1 bg-gray-800">
         <Header title="Saída" />
 
-        <Text className="text-white font-regular text-center m-6">Você precisa permitir que o aplicativo tenha acesso a localização para utilizar essa funcionalidade. Por favor, acesse as configurações do seu dispositivo para conceder essa permissão ao aplicativo.</Text>
+        <View className='flex-1 justify-center p-5 gap-4'>
+          <Text className="text-white font-regular text-center">Você precisa permitir que o aplicativo tenha acesso a localização para utilizar essa funcionalidade. Por favor, acesse as configurações do seu dispositivo para conceder essa permissão ao aplicativo.
+          </Text>
+
+          <Button title='Abrir configurações' onPress={openSettings} />
+        </View>
       </View>
     )
   }
