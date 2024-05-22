@@ -17,6 +17,7 @@ import { Map } from '../components/Map';
 import { getLastSyncTimestamp } from '../libs/asyncStorage/syncStorage';
 import { getStorageLocation } from '../libs/asyncStorage/locationStorage';
 import { stopLocationTask } from '../tasks/backgroundLocationTask';
+import { Locations } from '../components/Locations';
 
 type RouteParamsProps = {
   id: string
@@ -112,6 +113,11 @@ export function Arrival() {
       )}
 
       <View className='grow p-8'>
+        <Locations
+          departure={{ label: 'Saída', description: 'Saída teste' }}
+          arrival={{ label: 'Chegada', description: 'Chegada teste' }}
+        />
+
         <Text className="text-gray-300 text-sm font-regular mt-8 mb-1">Placa do veículo</Text>
 
         <Text className="text-gray-100 text-xxxl font-bold">{historic?.license_plate}</Text>
