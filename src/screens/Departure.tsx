@@ -7,7 +7,8 @@ import {
   watchPositionAsync,
   LocationAccuracy,
   LocationSubscription,
-  LocationObjectCoords
+  LocationObjectCoords,
+  requestBackgroundPermissionsAsync
 } from 'expo-location';
 
 import { useNavigation } from '@react-navigation/native';
@@ -63,7 +64,7 @@ export function Departure() {
 
       setIsRegistering(true)
 
-      const backgroundPermissions = await requestLocationForegroundPermission()
+      const backgroundPermissions = await requestBackgroundPermissionsAsync()
 
       if (!backgroundPermissions.granted) {
         setIsRegistering(false)

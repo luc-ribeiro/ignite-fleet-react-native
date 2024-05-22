@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import type { LatLng } from 'react-native-maps';
 import { X } from 'phosphor-react-native';
 
 import { BSON } from 'realm';
@@ -11,7 +12,10 @@ import { View, Text, Alert } from "react-native";
 import { Header } from '../components/Header';
 import { Button } from '../components/Button';
 import { ButtonIcon } from '../components/ButtonIcon';
+import { Map } from '../components/Map';
+
 import { getLastSyncTimestamp } from '../libs/asyncStorage/syncStorage';
+import { getStorageLocation } from '../libs/asyncStorage/locationStorage';
 import { stopLocationTask } from '../tasks/backgroundLocationTask';
 
 type RouteParamsProps = {
@@ -20,6 +24,7 @@ type RouteParamsProps = {
 
 export function Arrival() {
   const [dataNotSynced, setDataNotSynced] = useState(false);
+  const [coordinates, setCoordinates] = useState<LatLng[]>([])
 
   const route = useRoute()
   const { id } = route.params as RouteParamsProps
@@ -37,10 +42,13 @@ export function Arrival() {
     ])
   }
 
-  function removeVehicleUsage() {
+  async function removeVehicleUsage() {
     realm.write(() => {
       realm.delete(historic)
     })
+
+    await stopLocationTask()
+
     goBack()
   }
 
@@ -50,16 +58,14 @@ export function Arrival() {
         return Alert.alert('Error', 'Não foi possível obter os dados para registrar a chegada do veículo.')
       }
 
-      await stopLocationTask()
-
       realm.write(() => {
         historic.status = 'arrival'
         historic.updated_at = new Date()
       })
 
+      await stopLocationTask()
 
       Alert.alert('Chegada', 'Chegada registrada com sucesso!')
-
       goBack()
 
     } catch (error) {
@@ -67,15 +73,27 @@ export function Arrival() {
     }
   }
 
-  useEffect(() => {
-    getLastSyncTimestamp()
-      .then(lastSync => setDataNotSynced(historic!.updated_at.getTime() > lastSync));
+  async function getLocationsInfo() {
+    const lastSync = await getLastSyncTimestamp();
+    const updatedAt= historic!.updated_at.getTime(); 
+    setDataNotSynced(updatedAt > lastSync);
 
-  }, [])
+    const locationsStorage = await getStorageLocation();
+    setCoordinates(locationsStorage)
+  }
+
+  useEffect(() => {
+    getLocationsInfo()
+  },[historic])
 
   return (
     <View className="flex-1 bg-gray-800">
       <Header title={title} />
+
+      {coordinates.length > 0 && (
+        <Map coordinates={coordinates} />
+      )}
+      
       <View className='grow p-8'>
         <Text className="text-gray-300 text-sm font-regular mt-8 mb-1">Placa do veículo</Text>
 
