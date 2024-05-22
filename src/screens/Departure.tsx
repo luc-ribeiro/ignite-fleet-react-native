@@ -44,7 +44,7 @@ export function Departure() {
   const descriptionRef = useRef<TextInput>(null);
   const licensePlateRef = useRef<TextInput>(null);
 
-  function handleDepartureRegister() {
+  async function handleDepartureRegister() {
     try {
       if (!licencePlateValidate(licensePlate)) {
         licensePlateRef.current?.focus()
@@ -56,7 +56,18 @@ export function Departure() {
         return Alert.alert('Finalidade inválida', 'Por favor, informe a finalidade da utilização do veículo.')
       }
 
+      if (!currentCoords?.latitude && !currentCoords?.longitude) {
+        return Alert.alert('Localização', 'Não foi possível obter a localização atual. Tente novamente.')
+      }
+
       setIsRegistering(true)
+
+      const backgroundPermissions = await requestLocationForegroundPermission()
+
+      if (!backgroundPermissions.granted) {
+        setIsRegistering(false)
+        return Alert.alert('Localização', 'É necessário permitir que o App tenha acesso localização em segundo plano. Acesse as configurações do dispositivo e habilite "Permitir o tempo todo."')
+      }
 
       realm.write(() => {
         realm.create('Historic', Historic.generate({
