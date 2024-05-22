@@ -21,6 +21,7 @@ import { LocationInfoProps } from '../components/LocationInfo';
 import { getAddressLocation } from '../utils/getAddressLocation';
 
 import { stopLocationTask } from '../tasks/backgroundLocationTask';
+import { Loading } from '../components/Loading';
 
 type RouteParamsProps = {
   id: string
@@ -31,6 +32,7 @@ export function Arrival() {
   const [coordinates, setCoordinates] = useState<LatLng[]>([])
   const [departure, setDeparture] = useState<LocationInfoProps>({} as LocationInfoProps)
   const [arrival, setArrival] = useState<LocationInfoProps | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
 
   const route = useRoute()
   const { id } = route.params as RouteParamsProps
@@ -104,7 +106,7 @@ export function Arrival() {
       setCoordinates(coords ?? []);
     }
 
-    if(historic?.coords[0]) {
+    if (historic?.coords[0]) {
       const departureStreetName = await getAddressLocation(historic?.coords[0])
 
       setDeparture({
@@ -113,7 +115,7 @@ export function Arrival() {
       })
     }
 
-    if(historic?.status === 'arrival') {
+    if (historic?.status === 'arrival') {
       const lastLocation = historic.coords[historic.coords.length - 1];
       const arrivalStreetName = await getAddressLocation(lastLocation)
 
@@ -121,12 +123,18 @@ export function Arrival() {
         label: `Chegando em ${arrivalStreetName ?? ''}`,
         description: dayjs(new Date(lastLocation.timestamp)).format('DD/MM/YYYY [às] HH:mm')
       })
+
+      setIsLoading(false)
     }
   }
 
   useEffect(() => {
     getLocationsInfo()
   }, [historic])
+
+  if (isLoading) {
+    return <Loading />
+  }
 
   return (
     <View className="flex-1 bg-gray-800">

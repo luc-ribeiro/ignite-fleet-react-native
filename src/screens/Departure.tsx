@@ -4,11 +4,11 @@ import { CarSimple } from 'phosphor-react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import {
   useForegroundPermissions,
+  requestBackgroundPermissionsAsync,
   watchPositionAsync,
   LocationAccuracy,
   LocationSubscription,
-  LocationObjectCoords,
-  requestBackgroundPermissionsAsync
+  LocationObjectCoords
 } from 'expo-location';
 
 import { useNavigation } from '@react-navigation/native';
@@ -72,7 +72,7 @@ export function Departure() {
 
         return Alert.alert(
           'Localização',
-          'É necessário permitir que o App tenha acesso localização em segundo plano. Acesse as configurações do dispositivo e habilite "Permitir o tempo todo."',
+          'É necessário permitir que o App tenha acesso a localização em segundo plano. Acesse as configurações do dispositivo e habilite "Permitir o tempo todo."',
           [{ text: 'Abrir configurações', onPress: openSettings }]
         )
       }
