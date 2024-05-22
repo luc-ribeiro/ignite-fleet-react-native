@@ -52,15 +52,18 @@ export function Arrival() {
     goBack()
   }
 
- async function handleArrivalRegister() {
+  async function handleArrivalRegister() {
     try {
       if (!historic) {
         return Alert.alert('Error', 'Não foi possível obter os dados para registrar a chegada do veículo.')
       }
 
+      const locations = await getStorageLocation()
+
       realm.write(() => {
         historic.status = 'arrival'
         historic.updated_at = new Date()
+        historic.coords.push(...locations)
       })
 
       await stopLocationTask()
@@ -74,17 +77,25 @@ export function Arrival() {
   }
 
   async function getLocationsInfo() {
+    if (!historic) {
+      return
+    }
+
     const lastSync = await getLastSyncTimestamp();
-    const updatedAt= historic!.updated_at.getTime(); 
+    const updatedAt = historic!.updated_at.getTime();
     setDataNotSynced(updatedAt > lastSync);
 
-    const locationsStorage = await getStorageLocation();
-    setCoordinates(locationsStorage)
+    if (historic?.status === 'departure') {
+      const locationsStorage = await getStorageLocation();
+      setCoordinates(locationsStorage);
+    } else {
+      setCoordinates(historic?.coords ?? []);
+    }
   }
 
   useEffect(() => {
     getLocationsInfo()
-  },[historic])
+  }, [historic])
 
   return (
     <View className="flex-1 bg-gray-800">
@@ -93,7 +104,7 @@ export function Arrival() {
       {coordinates.length > 0 && (
         <Map coordinates={coordinates} />
       )}
-      
+
       <View className='grow p-8'>
         <Text className="text-gray-300 text-sm font-regular mt-8 mb-1">Placa do veículo</Text>
 
