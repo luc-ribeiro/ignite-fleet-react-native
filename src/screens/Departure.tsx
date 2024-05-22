@@ -7,7 +7,8 @@ import {
   watchPositionAsync,
   LocationAccuracy,
   LocationSubscription,
-  LocationObjectCoords
+  LocationObjectCoords,
+  requestBackgroundPermissionsAsync
 } from 'expo-location';
 
 import { useNavigation } from '@react-navigation/native';
@@ -38,9 +39,9 @@ export function Departure() {
 
   const [locationForegroundPermission, requestLocationForegroundPermission] = useForegroundPermissions()
 
-  const { goBack } = useNavigation()
   const realm = useRealm()
   const user = useUser()
+  const { goBack } = useNavigation()
 
   const descriptionRef = useRef<TextInput>(null);
   const licensePlateRef = useRef<TextInput>(null);
@@ -63,11 +64,14 @@ export function Departure() {
 
       setIsRegistering(true)
 
-      const backgroundPermissions = await requestLocationForegroundPermission()
+      const backgroundPermissions = await requestBackgroundPermissionsAsync()
 
       if (!backgroundPermissions.granted) {
         setIsRegistering(false)
-        return Alert.alert('Localização', 'É necessário permitir que o App tenha acesso localização em segundo plano. Acesse as configurações do dispositivo e habilite "Permitir o tempo todo."')
+        return Alert.alert(
+          'Localização', 
+          'É necessário permitir que o App tenha acesso localização em segundo plano. Acesse as configurações do dispositivo e habilite "Permitir o tempo todo.'
+        )
       }
 
       await startLocationTask();
@@ -81,6 +85,7 @@ export function Departure() {
       })
 
       Alert.alert('Sucesso', 'Saída registrada com sucesso.')
+
       goBack()
 
     } catch (error) {
@@ -106,6 +111,7 @@ export function Departure() {
       timeInterval: 1000
     }, (location) => {
       setCurrentCoords(location.coords)
+
       getAddressLocation(location.coords)
         .then(address => {
           if (address) {

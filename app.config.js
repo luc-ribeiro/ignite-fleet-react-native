@@ -22,7 +22,7 @@ module.exports = {
         "googleMapsApiKey": process.env.GOOGLE_MAPS_API_KEY
       },
       "infoPlist": {
-        "UIBackgroundModes":  ["location", "fetch", "remote-notification"]
+        "UIBackgroundModes": ["location", "fetch", "remote-notification"]
       }
     },
     "android": {
@@ -33,8 +33,10 @@ module.exports = {
       "package": "com.lucribeiro.ignitefleet",
       "permissions":
         [
-          "ACCESS_FINE_LOCATION",
           "ACCESS_COARSE_LOCATION",
+          "ACCESS_FINE_LOCATION",
+          "FOREGROUND_SERVICE",
+          "FOREGROUND_SERVICE_LOCATION",
           "ACCESS_BACKGROUND_LOCATION"
         ],
       "config": {
@@ -50,8 +52,7 @@ module.exports = {
       [
         "expo-location",
         {
-          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location.",
-          "isAndroidForegroundServiceEnabled": true
+          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
         }
       ]
     ]
