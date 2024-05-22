@@ -22,7 +22,7 @@ module.exports = {
         "googleMapsApiKey": process.env.GOOGLE_MAPS_API_KEY
       },
       "infoPlist": {
-        "UIBackgroundModes": ["location"]
+        "UIBackgroundModes":  ["location", "fetch", "remote-notification"]
       }
     },
     "android": {
@@ -50,7 +50,8 @@ module.exports = {
       [
         "expo-location",
         {
-          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
+          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location.",
+          "isAndroidForegroundServiceEnabled": true
         }
       ]
     ]
