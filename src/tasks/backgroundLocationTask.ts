@@ -38,20 +38,26 @@ TaskManager.defineTask(BACKGROUND_TASK_NAME, async ({ data, error }: any) => {
 })
 
 export async function startLocationTask() {
-  console.log('Teste')
-
   try {
     const hasStarted = await hasStartedLocationUpdatesAsync(BACKGROUND_TASK_NAME)
+
+    console.log('hasStarted Antes => ', hasStarted)
+
 
     if (hasStarted) {
       await stopLocationTask()
     }
+
+    console.log('hasStarted Depois => ', hasStarted)
 
     await startLocationUpdatesAsync(BACKGROUND_TASK_NAME, {
       accuracy: Accuracy.Highest,
       distanceInterval: 1,
       timeInterval: 1000
     })
+
+  console.log('Chegou aqui startLocationUpdatesAsync')
+
 
   } catch (error) {
     console.log(error)
