@@ -21,6 +21,7 @@ import { LocationInfoProps } from '../components/LocationInfo';
 import { getAddressLocation } from '../utils/getAddressLocation';
 
 import { stopLocationTask } from '../tasks/backgroundLocationTask';
+import { getStorageLocation } from '../libs/asyncStorage/locationStorage';
 import { Loading } from '../components/Loading';
 
 type RouteParamsProps = {

@@ -8,7 +8,8 @@ import {
   watchPositionAsync,
   LocationAccuracy,
   LocationSubscription,
-  LocationObjectCoords
+  LocationObjectCoords,
+  requestBackgroundPermissionsAsync
 } from 'expo-location';
 
 import { useNavigation } from '@react-navigation/native';
@@ -40,9 +41,9 @@ export function Departure() {
 
   const [locationForegroundPermission, requestLocationForegroundPermission] = useForegroundPermissions()
 
-  const { goBack } = useNavigation()
   const realm = useRealm()
   const user = useUser()
+  const { goBack } = useNavigation()
 
   const descriptionRef = useRef<TextInput>(null);
   const licensePlateRef = useRef<TextInput>(null);
@@ -93,6 +94,7 @@ export function Departure() {
       })
 
       Alert.alert('Sucesso', 'Saída registrada com sucesso.')
+
       goBack()
 
     } catch (error) {
@@ -118,6 +120,7 @@ export function Departure() {
       timeInterval: 1000
     }, (location) => {
       setCurrentCoords(location.coords)
+
       getAddressLocation(location.coords)
         .then(address => {
           if (address) {
