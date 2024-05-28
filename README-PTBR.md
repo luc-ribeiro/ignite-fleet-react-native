@@ -46,7 +46,8 @@ $ npm i
 3. Crie um arquivo .env usando a estrutura do arquivo .env.example. Use as chaves geradas anteriormente.
 
 4. Execute o projeto:
-$ npm start
+$ npx expo prebuild
+$ npx expo run:android
 
 - Com o Expo Go aberto em seu dispositivo, escaneie o QR code no terminal.
 OBS: É preciso ter o Expo Go instalado em seu dispositivo móvel.
