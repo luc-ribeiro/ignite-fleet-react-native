@@ -26,8 +26,6 @@ TaskManager.defineTask(BACKGROUND_TASK_NAME, async ({ data, error }: any) => {
         timestamp
       }
 
-      console.log('CURRENT LOCATION =>', currentLocation)
-
       await saveStorageLocation(currentLocation)
     }
 
@@ -62,7 +60,6 @@ export async function startLocationTask() {
   } catch (error) {
     console.log(error)
   }
-
 }
 
 export async function stopLocationTask() {
