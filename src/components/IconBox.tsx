@@ -11,7 +11,7 @@ type Props = {
 }
 
 export function IconBox({ icon: Icon, size = 'NORMAL' }: Props) {
-  const iconSize = size === 'NORMAL' ? 24 : 16
+  const iconSize = size === 'NORMAL' ? 24 : 28
 
   const viewSize = size === 'NORMAL' ? 4 : 2
 

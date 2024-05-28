@@ -9,7 +9,6 @@ import {
   LocationAccuracy,
   LocationSubscription,
   LocationObjectCoords,
-  requestBackgroundPermissionsAsync
 } from 'expo-location';
 
 import { useNavigation } from '@react-navigation/native';
