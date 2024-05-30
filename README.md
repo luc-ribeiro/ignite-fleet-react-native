@@ -24,7 +24,6 @@ An app that allows users to track their vehicle's departure and arrival history.
 - **DayJS**
 
 ## 🔖 Layout 
-
 ![Capa](https://github.com/luc-ribeiro/ignite-fleet-react-native/assets/69688077/9fef128a-4699-4153-a01b-90b595f397a9)
 
 ## 🚀 Running the project
